@@ -69,8 +69,6 @@ public class Hangman {
 
 				line = br.readLine();
 
-				// System.out.println(line);
-
 			}
 
 			br.close();
