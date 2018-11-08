@@ -1,4 +1,6 @@
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,8 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class Hangman {
+public class Hangman implements KeyListener {
 	static ArrayList<String> arraylist = new ArrayList<String>();
+	String wordPop;
+	StringBuilder hiddenWord = new StringBuilder();
+	JLabel guessLetter = new JLabel();
 
 	public static void main(String[] args) {
 
@@ -25,7 +30,6 @@ public class Hangman {
 
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel(new GridLayout(4, 1));
-		JLabel guessLetter = new JLabel();
 		JLabel underline = new JLabel();
 		JLabel livesLeft = new JLabel();
 		JLabel solvedWords = new JLabel();
@@ -33,10 +37,10 @@ public class Hangman {
 		frame.setSize(700, 700);
 		frame.setVisible(true);
 		panel.setVisible(true);
-		guessLetter.setVisible(true);
 		underline.setVisible(true);
 		livesLeft.setVisible(true);
 		solvedWords.setVisible(true);
+		guessLetter.setVisible(true);
 
 		frame.add(panel);
 		panel.add(guessLetter);
@@ -44,6 +48,7 @@ public class Hangman {
 		panel.add(livesLeft);
 		panel.add(livesLeft);
 		panel.add(solvedWords);
+		frame.addKeyListener(this);
 
 		guessLetter.setVisible(true);
 		underline.setVisible(true);
@@ -79,6 +84,7 @@ public class Hangman {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		Stack<String> stack = new Stack<String>();
 		for (int i = 0; i < userInput; i++) {
 
@@ -88,7 +94,54 @@ public class Hangman {
 			stack.push(arraylist.get(randomNumber));
 
 		}
+
+		wordPop = stack.pop();
+
+		System.out.println(wordPop);
+
 		System.out.println(stack);
+
+		guessLetter.addKeyListener(this);
+		for (int i = 0; i < wordPop.length(); i++) {
+
+			hiddenWord.append("_ ");
+
+			guessLetter.setText(hiddenWord.toString());
+		}
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+		if (wordPop.contains(Character.toString(e.getKeyChar()))) {
+
+			for (int i = 0; i < wordPop.length(); i++) {
+
+				if (wordPop.charAt(i) == e.getKeyChar()) {
+
+					hiddenWord.setCharAt(i, e.getKeyChar());
+
+					guessLetter.setText(hiddenWord.toString());
+					
+				}
+
+			}
+
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
