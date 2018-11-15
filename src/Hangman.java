@@ -13,12 +13,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 public class Hangman implements KeyListener {
 	static ArrayList<String> arraylist = new ArrayList<String>();
 	String wordPop;
+	JFrame frame = new JFrame();
 	StringBuilder hiddenWord = new StringBuilder();
-	JLabel guessLetter = new JLabel();
+	JLabel guessLetter = new JLabel();	
+	JLabel underline = new JLabel();
+	JLabel solvedWords = new JLabel();
+	JLabel livesLeft = new JLabel();
+
+	Stack<String> stack = new Stack<String>();
+
+	int livesleft = 7;
+
+	int solvedwords = 0;
 
 	public static void main(String[] args) {
 
@@ -27,20 +38,20 @@ public class Hangman implements KeyListener {
 	}
 
 	Hangman() {
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		JFrame frame = new JFrame();
-		JPanel panel = new JPanel(new GridLayout(4, 1));
-		JLabel underline = new JLabel();
-		JLabel livesLeft = new JLabel();
-		JLabel solvedWords = new JLabel();
+		JPanel panel = new JPanel(new GridLayout(4,1));
+
+
 
 		frame.setSize(700, 700);
 		frame.setVisible(true);
 		panel.setVisible(true);
+		guessLetter.setVisible(true);
 		underline.setVisible(true);
 		livesLeft.setVisible(true);
 		solvedWords.setVisible(true);
-		guessLetter.setVisible(true);
+	
 
 		frame.add(panel);
 		panel.add(guessLetter);
@@ -55,9 +66,10 @@ public class Hangman implements KeyListener {
 		livesLeft.setVisible(true);
 		solvedWords.setVisible(true);
 
-		guessLetter.setText(" Guess a letter ");
-		livesLeft.setText(" You have 7 lives left ");
-		solvedWords.setText(" You have solved " + " words ");
+		guessLetter.setHorizontalAlignment(JLabel.CENTER);
+		guessLetter.setText("Guess a letter ");
+		livesLeft.setText("     You have" + livesleft + " lives left ");
+		solvedWords.setText(" You have solved " + solvedwords + " words ");
 
 		frame.pack();
 
@@ -85,7 +97,6 @@ public class Hangman implements KeyListener {
 			e.printStackTrace();
 		}
 
-		Stack<String> stack = new Stack<String>();
 		for (int i = 0; i < userInput; i++) {
 
 			Random random = new Random();
@@ -106,7 +117,7 @@ public class Hangman implements KeyListener {
 
 			hiddenWord.append("_ ");
 
-			guessLetter.setText(hiddenWord.toString());
+			underline.setText(hiddenWord.toString());
 		}
 
 	}
@@ -121,15 +132,49 @@ public class Hangman implements KeyListener {
 
 				if (wordPop.charAt(i) == e.getKeyChar()) {
 
-					hiddenWord.setCharAt(i, e.getKeyChar());
+					hiddenWord.setCharAt(i * 2, e.getKeyChar());
 
-					guessLetter.setText(hiddenWord.toString());
-					
+					underline.setText(hiddenWord.toString());
+
 				}
+			}
+		} else {
+			livesleft = livesleft - 1;
+
+			livesLeft.setText(" You have " + livesleft + " lives left ");
+
+			if (livesleft == 0) {
+				JOptionPane.showMessageDialog(null, "Better Luck New Time! Play again");
+				System.exit(0);
 
 			}
 
 		}
+		if (hiddenWord.toString().contains("_ ") == false) {
+			// or !hiddenWord.toString().contains("_ ")
+
+			solvedwords = solvedwords + 1;
+
+			solvedWords.setText(" You have solved " + solvedwords + " words ");
+			if (stack.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Congratulations! Play again");
+			}
+
+			else {
+
+				wordPop = stack.pop();
+			}
+			hiddenWord = new StringBuilder();
+
+			for (int i = 0; i < wordPop.length(); i++) {
+
+				hiddenWord.append("_ ");
+
+				underline.setText(hiddenWord.toString());
+			}
+
+		}
+
 	}
 
 	@Override
