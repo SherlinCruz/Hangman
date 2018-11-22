@@ -20,7 +20,7 @@ public class Hangman implements KeyListener {
 	String wordPop;
 	JFrame frame = new JFrame();
 	StringBuilder hiddenWord = new StringBuilder();
-	JLabel guessLetter = new JLabel();	
+	JLabel guessLetter = new JLabel();
 	JLabel underline = new JLabel();
 	JLabel solvedWords = new JLabel();
 	JLabel livesLeft = new JLabel();
@@ -30,7 +30,9 @@ public class Hangman implements KeyListener {
 	int livesleft = 7;
 
 	int solvedwords = 0;
-
+	
+	int userInput;
+	
 	public static void main(String[] args) {
 
 		Hangman Hangman = new Hangman();
@@ -40,9 +42,7 @@ public class Hangman implements KeyListener {
 	Hangman() {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		JPanel panel = new JPanel(new GridLayout(4,1));
-
-
+		JPanel panel = new JPanel(new GridLayout(4, 1));
 
 		frame.setSize(700, 700);
 		frame.setVisible(true);
@@ -51,7 +51,6 @@ public class Hangman implements KeyListener {
 		underline.setVisible(true);
 		livesLeft.setVisible(true);
 		solvedWords.setVisible(true);
-	
 
 		frame.add(panel);
 		panel.add(guessLetter);
@@ -67,15 +66,24 @@ public class Hangman implements KeyListener {
 		solvedWords.setVisible(true);
 
 		guessLetter.setHorizontalAlignment(JLabel.CENTER);
+		underline.setHorizontalAlignment(JLabel.CENTER);
 		guessLetter.setText("Guess a letter ");
 		livesLeft.setText("     You have" + livesleft + " lives left ");
 		solvedWords.setText(" You have solved " + solvedwords + " words ");
 
 		frame.pack();
 
-		String number = JOptionPane.showInputDialog(" How many round do you want to play ? ");
-		int userInput = Integer.parseInt(number);
-
+		while( userInput <= 0 )
+		{
+			String number = JOptionPane.showInputDialog(" How many round do you want to play ? ");
+			try {
+				userInput = Integer.parseInt(number);
+			} catch (Exception e) {
+	
+				JOptionPane.showMessageDialog(null, "Error: Only input numbers");	
+			}
+		}
+		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("src/dictionary.txt"));
 
@@ -87,7 +95,7 @@ public class Hangman implements KeyListener {
 				line = br.readLine();
 
 			}
-
+			
 			br.close();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
